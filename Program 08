@@ -1,0 +1,64 @@
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+from nltk.corpus import brown
+import random
+
+# Download the necessary NLTK resources (you can skip this if you've already downloaded them)
+nltk.download('punkt')
+nltk.download('brown')
+
+def train_stochastic_pos_tagger(corpus):
+    # Train a stochastic POS tagger using a basic probabilistic model
+    pos_model = {}
+    
+    for sent in corpus.tagged_sents():
+        for word, tag in sent:
+            word = word.lower()  # Convert to lowercase for case-insensitivity
+            if word not in pos_model:
+                pos_model[word] = {}
+            if tag not in pos_model[word]:
+                pos_model[word][tag] = 1
+            else:
+                pos_model[word][tag] += 1
+
+    # Normalize probabilities
+    for word in pos_model:
+        total_count = sum(pos_model[word].values())
+        for tag in pos_model[word]:
+            pos_model[word][tag] /= total_count
+
+    return pos_model
+
+def stochastic_pos_tagging(text, pos_model):
+    # Tokenize the input text into words
+    words = word_tokenize(text.lower())  # Convert to lowercase for case-insensitivity
+
+    # Assign POS tags based on the probabilistic model
+    pos_tags = []
+
+    for word in words:
+        if word in pos_model:
+            tag_probabilities = pos_model[word]
+            selected_tag = random.choices(list(tag_probabilities.keys()), weights=list(tag_probabilities.values()))[0]
+            pos_tags.append((word, selected_tag))
+        else:
+            # If the word is unknown, assign a default tag (e.g., 'NN' for noun)
+            pos_tags.append((word, 'NN'))
+
+    return pos_tags
+
+# Train the stochastic POS tagger using the Brown corpus
+pos_model = train_stochastic_pos_tagger(brown)
+
+# Example text
+input_text = "The quick brown fox jumps over the lazy dog."
+
+# Perform stochastic POS tagging
+pos_tags_result = stochastic_pos_tagging(input_text, pos_model)
+
+# Display the result
+print("Original Text:", input_text)
+print("\nStochastic Parts of Speech Tags:")
+for word, pos_tag in pos_tags_result:
+    print(f"{word}: {pos_tag}")
