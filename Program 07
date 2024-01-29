@@ -1,0 +1,28 @@
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+
+# Download the necessary NLTK resources (you can skip this if you've already downloaded them)
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
+def perform_pos_tagging(text):
+    # Tokenize the input text into words
+    words = word_tokenize(text)
+
+    # Perform parts of speech tagging
+    pos_tags = pos_tag(words)
+
+    return pos_tags
+
+# Example text
+input_text = "The quick brown fox jumps over the lazy dog."
+
+# Perform parts of speech tagging
+pos_tags_result = perform_pos_tagging(input_text)
+
+# Display the result
+print("Original Text:", input_text)
+print("\nParts of Speech Tags:")
+for word, pos_tag in pos_tags_result:
+    print(f"{word}: {pos_tag}")
