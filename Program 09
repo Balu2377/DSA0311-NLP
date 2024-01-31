@@ -1,0 +1,33 @@
+import re
+
+def pos_tag(sentence):
+    tags = []
+    
+    # Define regular expressions for common parts of speech
+    patterns = [
+        (r'\b(?:Noun)\b', 'NOUN'),
+        (r'\b(?:Verb)\b', 'VERB'),
+        (r'\b(?:Adjective)\b', 'ADJ'),
+        (r'\b(?:Adverb)\b', 'ADV'),
+        (r'\b(?:Preposition)\b', 'PREP'),
+        (r'\b(?:Conjunction)\b', 'CONJ'),
+        (r'\b(?:Pronoun)\b', 'PRON'),
+        (r'\b(?:Interjection)\b', 'INTJ'),
+        (r'\b(?:Determiner)\b', 'DET'),
+        (r'\b(?:Number)\b', 'NUM'),
+    ]
+
+    # Apply regular expressions to tag parts of speech
+    for pattern, tag in patterns:
+        matches = re.finditer(pattern, sentence)
+        for match in matches:
+            tags.append((match.group(), tag))
+    
+    return tags
+
+# Example usage:
+sentence = "The quick brown fox jumps over the lazy dog."
+tags = pos_tag(sentence)
+
+print("Original Sentence:", sentence)
+print("Parts of Speech Tags:", tags)
